@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>মিস্ত্রি রেজিস্ট্রেশন</title>
+<style>
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-light: #ede9fe;
+  --success: #059669;
+  --success-light: #d1fae5;
+  --danger: #dc2626;
+  --bg: #f0f2ff;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --nav-h: 60px;
+  --bottom-h: 68px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow-x: hidden; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans Bengali', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ───── TOP NAV ───── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: #1a1a2e;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.topnav-logo { display: flex; align-items: center; gap: 10px; }
+.topnav-logo .ico { font-size: 24px; }
+.topnav-logo h1 { color: #fff; font-size: 16px; font-weight: 700; line-height: 1.2; }
+.topnav-logo small { color: #a5b4fc; font-size: 11px; font-weight: 400; display: block; }
+.admin-link {
+  color: #a5b4fc; font-size: 13px; font-weight: 600;
+  padding: 8px 14px; border: 1px solid #4f46e5; border-radius: 20px;
+  background: rgba(79,70,229,0.15); cursor: pointer; white-space: nowrap;
+}
+
+/* ───── PAGES ───── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ───── FORM SCROLL AREA ───── */
+.form-scroll {
+  padding: 16px 14px calc(var(--bottom-h) + 16px);
+  max-width: 560px; margin: 0 auto;
+}
+
+/* ───── PROGRESS BAR ───── */
+.progress-wrap { margin-bottom: 20px; }
+.progress-steps { display: flex; gap: 6px; margin-bottom: 8px; }
+.progress-step {
+  flex: 1; height: 4px; border-radius: 4px; background: #ddd;
+  transition: background 0.3s;
+}
+.progress-step.done { background: var(--primary); }
+.progress-step.active { background: #818cf8; }
+.progress-label { font-size: 12px; color: var(--muted); text-align: center; }
+
+/* ───── SECTION CARDS ───── */
+.step-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.step-title {
+  font-size: 13px; font-weight: 700; color: var(--primary);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--primary-light);
+}
+.step-title .sico { font-size: 18px; }
+
+/* ───── TRADE GRID ───── */
+.trade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.trade-card {
+  padding: 14px 8px 12px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  background: #fafbff;
+  transition: all 0.18s;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+.trade-card:active { transform: scale(0.96); }
+.trade-card.on {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+.trade-card .check {
+  position: absolute; top: 6px; right: 8px;
+  font-size: 14px; opacity: 0; transition: opacity 0.15s;
+}
+.trade-card.on .check { opacity: 1; }
+.trade-card .tico { font-size: 26px; margin-bottom: 6px; }
+.trade-card .tlbl {
+  font-size: 12px; font-weight: 600; color: #444; line-height: 1.3;
+}
+.trade-card.on .tlbl { color: var(--primary-dark); }
+
+/* ───── FIELDS ───── */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label.lbl {
+  display: block; font-size: 13px; font-weight: 600;
+  color: #374151; margin-bottom: 6px;
+}
+label.lbl .req { color: #e53e3e; }
+input, select, textarea {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 15px;
+  color: var(--text);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+}
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+textarea { resize: none; min-height: 90px; line-height: 1.5; }
+input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+/* ───── BOTTOM STICKY BUTTONS ───── */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; gap: 10px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  height: var(--bottom-h);
+  align-items: center;
+  width: 100%;
+}
+.btn-back {
+  flex: 0 0 auto;
+  padding: 0 20px; height: 48px;
+  border: 2px solid var(--border); border-radius: 12px;
+  background: #fff; color: var(--muted); font-size: 15px; font-weight: 600;
+  cursor: pointer;
+}
+.btn-next {
+  flex: 1; height: 48px;
+  background: var(--primary); color: #fff;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: background 0.15s;
+}
+.btn-next:active { background: var(--primary-dark); transform: scale(0.98); }
+.btn-submit {
+  flex: 1; height: 48px;
+  background: var(--success); color: #fff;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: background 0.15s;
+}
+.btn-submit:active { background: #047857; transform: scale(0.98); }
+
+/* ───── SUCCESS ───── */
+.success-page {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 24px; text-align: center;
+}
+.success-page .big-ico { font-size: 72px; margin-bottom: 16px; animation: popIn 0.4s ease; }
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-page h2 { font-size: 22px; font-weight: 700; color: #065f46; margin-bottom: 8px; }
+.success-page p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+.ref-badge {
+  background: var(--success-light); color: #065f46;
+  padding: 12px 24px; border-radius: 50px;
+  font-size: 14px; font-weight: 700; margin-bottom: 28px;
+  border: 1px solid #6ee7b7;
+}
+.btn-again {
+  width: 100%; max-width: 320px; padding: 15px;
+  background: var(--primary); color: #fff;
+  border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
+  cursor: pointer;
+}
+
+/* ───── ADMIN ───── */
+.admin-scroll { padding: 16px 14px 100px; max-width: 700px; margin: 0 auto; }
+.lock-card {
+  background: var(--card); border-radius: 20px; padding: 36px 24px;
+  text-align: center; margin: 40px auto; max-width: 360px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+}
+.lock-card .lock-ico { font-size: 52px; margin-bottom: 12px; }
+.lock-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.lock-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.lock-card input { margin-bottom: 14px; }
+.btn-login {
+  width: 100%; padding: 14px; background: var(--primary); color: #fff;
+  border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.lock-err { color: var(--danger); font-size: 13px; margin-top: 10px; display: none; }
+.default-pw { margin-top: 18px; font-size: 12px; color: #aaa; }
+
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.admin-header h2 { font-size: 18px; font-weight: 700; }
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-csv { padding: 9px 16px; background: var(--success); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-delall { padding: 9px 16px; background: var(--danger); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-logout { padding: 9px 16px; background: #f3f4f6; color: #555; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-box { background: var(--card); border-radius: 14px; padding: 14px 10px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+.stat-box .snum { font-size: 26px; font-weight: 700; color: var(--primary); line-height: 1; }
+.stat-box .slbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.search-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-bar input { flex: 1; }
+.filter-selects { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-selects select { flex: 1; min-width: 130px; font-size: 13px; padding: 10px 12px; border-radius: 10px; }
+.btn-clearfilter { padding: 10px 14px; background: #f3f4f6; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: #555; cursor: pointer; white-space: nowrap; }
+
+/* mobile card list for admin */
+.rec-list { display: flex; flex-direction: column; gap: 12px; }
+.rec-card {
+  background: var(--card); border-radius: 14px; padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.rec-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.rec-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--primary-light); color: var(--primary-dark);
+  font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.rec-name { font-size: 15px; font-weight: 700; }
+.rec-date { font-size: 12px; color: var(--muted); }
+.rec-phone { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 600; }
+.rec-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.rec-meta-item { font-size: 12px; }
+.rec-meta-item .mk { color: var(--muted); display: block; }
+.rec-meta-item .mv { font-weight: 600; color: var(--text); }
+.trades-wrap { margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--primary-light); color: var(--primary-dark); }
+.rec-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); }
+.btn-call { padding: 8px 16px; background: #dcfce7; color: #166534; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn-del { padding: 8px 14px; background: #fee2e2; color: #b91c1c; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.no-data { text-align: center; padding: 48px 16px; color: var(--muted); font-size: 15px; background: var(--card); border-radius: 14px; }
+/* ───── TOAST ───── */
+.toast {
+  position: fixed; top: 76px; left: 50%; transform: translateX(-50%);
+  background: #1a1a2e; color: #fff;
+  padding: 12px 20px; border-radius: 12px;
+  font-size: 14px; font-weight: 600;
+  z-index: 9999; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  opacity: 0; transition: opacity 0.2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+
+/* STEP VISIBILITY */
+.step { display: none; }
+.step.active { display: block; }
+
+@media (min-width: 480px) {
+  .trade-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="topnav-logo">
+    <span class="ico">🔧</span>
+    <div>
+      <h1>মিস্ত্রি রেজিস্ট্রেশন</h1>
+      <small>সার্ভিস প্রোভাইডার ফর্ম</small>
+    </div>
+  </div>
+  <button class="admin-link" onclick="showPage('admin')">🔐 Admin</button>
+</div>
+
+<!-- ══════════ FORM PAGE ══════════ -->
+<div class="page active" id="pageForm">
+
+  <!-- SUCCESS -->
+  <div id="successScreen" style="display:none;">
+    <div class="success-page">
+      <div class="big-ico">🎉</div>
+      <h2>সফলভাবে রেজিস্ট্রেশন হয়েছে!</h2>
+      <p>আপনার তথ্য সংরক্ষিত হয়েছে।<br>Admin শীঘ্রই যোগাযোগ করবেন।</p>
+      <div class="ref-badge" id="refBadge">Ref ID: —</div>
+      <button class="btn-again" onclick="resetForm()">➕ আরেকজন রেজিস্ট্রেশন করুন</button>
+    </div>
+  </div>
+
+  <!-- MULTI STEP FORM -->
+  <div id="formMain">
+    <div class="form-scroll">
+
+      <!-- Progress -->
+      <div class="progress-wrap">
+        <div class="progress-steps">
+          <div class="progress-step active" id="ps1"></div>
+          <div class="progress-step" id="ps2"></div>
+          <div class="progress-step" id="ps3"></div>
+          <div class="progress-step" id="ps4"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">ধাপ ১ / ৪ — পেশা বেছে নিন</div>
+      </div>
+
+      <!-- STEP 1: Trade selection -->
+      <div class="step active" id="step1">
+        <div class="step-card">
+          <div class="step-title"><span class="sico">🛠️</span> কাজের ধরন বেছে নিন <span style="color:#e53e3e">*</span></div>
+          <div class="trade-grid" id="tradeGrid">
+            <div class="trade-card" data-t="False Ceiling মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🏠</div><div class="tlbl">False Ceiling মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Electrician" onclick="pick(this)"><span class="check">✅</span><div class="tico">⚡</div><div class="tlbl">Electrician</div></div>
+            <div class="trade-card" data-t="Wallpaper মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🎨</div><div class="tlbl">Wallpaper মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Painter" onclick="pick(this)"><span class="check">✅</span><div class="tico">🖌️</div><div class="tlbl">Painter</div></div>
+            <div class="trade-card" data-t="Tiles মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🔲</div><div class="tlbl">Tiles মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="ACP মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🏗️</div><div class="tlbl">ACP মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Plumber" onclick="pick(this)"><span class="check">✅</span><div class="tico">🔧</div><div class="tlbl">Plumber</div></div>
+            <div class="trade-card" data-t="Carpenter" onclick="pick(this)"><span class="check">✅</span><div class="tico">🪚</div><div class="tlbl">Carpenter</div></div>
+            <div class="trade-card" data-t="Building Contractor" onclick="pick(this)"><span class="check">✅</span><div class="tico">🏢</div><div class="tlbl">Building Contractor</div></div>
+            <div class="trade-card" data-t="Glass Window & Grill মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🪟</div><div class="tlbl">Glass Window & Grill মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Decoration / Decorator" onclick="pick(this)"><span class="check">✅</span><div class="tico">🎀</div><div class="tlbl">Decoration / Decorator</div></div>
+            <div class="trade-card" data-t="Floor Carpet Setup মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🟫</div><div class="tlbl">Floor Carpet মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Artificial Grass / Flower মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🌿</div><div class="tlbl">Artificial Grass / Flower</div></div>
+            <div class="trade-card" data-t="Colour Tin Shade মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🏚️</div><div class="tlbl">Colour Tin Shade মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Building মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🧱</div><div class="tlbl">Building মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="Profile Light / Setup মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">💡</div><div class="tlbl">Profile Light / Setup</div></div>
+            <div class="trade-card" data-t="Putti মিস্ত্রি" onclick="pick(this)"><span class="check">✅</span><div class="tico">🪣</div><div class="tlbl">Putti মিস্ত্রি</div></div>
+            <div class="trade-card" data-t="সোবার / অন্যান্য" onclick="pick(this)"><span class="check">✅</span><div class="tico">🛠️</div><div class="tlbl">সোবার / অন্যান্য</div></div>
+          </div>
+          <p class="hint" style="margin-top:12px;">👆 একাধিক পেশা বেছে নিতে পারবেন</p>
+        </div>
+      </div>
+
+      <!-- STEP 2: Personal info -->
+      <div class="step" id="step2">
+        <div class="step-card">
+          <div class="step-title"><span class="sico">👤</span> ব্যক্তিগত তথ্য</div>
+          <div class="field">
+            <label class="lbl">পুরো নাম <span class="req">*</span></label>
+            <input id="name" type="text" placeholder="আপনার পুরো নাম লিখুন" autocomplete="name">
+          </div>
+          <div class="field">
+            <label class="lbl">মোবাইল নম্বর <span class="req">*</span></label>
+            <input id="phone" type="tel" placeholder="01XXXXXXXXX" autocomplete="tel" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label class="lbl">WhatsApp নম্বর</label>
+            <input id="whatsapp" type="tel" placeholder="একই হলে খালি রাখুন" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label class="lbl">অভিজ্ঞতা <span class="req">*</span></label>
+            <select id="exp">
+              <option value="">— বেছে নিন —</option>
+              <option>১ বছরের কম</option>
+              <option>১–৩ বছর</option>
+              <option>৩–৫ বছর</option>
+              <option>৫–১০ বছর</option>
+              <option>১০+ বছর</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Address -->
+      <div class="step" id="step3">
+        <div class="step-card">
+          <div class="step-title"><span class="sico">📍</span> ঠিকানা</div>
+          <div class="field">
+            <label class="lbl">বাড়ির ঠিকানা <span class="req">*</span></label>
+            <input id="addr" type="text" placeholder="বাড়ি নম্বর, পাড়া, মহল্লা" autocomplete="street-address">
+          </div>
+          <div class="field">
+            <label class="lbl">গ্রাম / শহর <span class="req">*</span></label>
+            <input id="village" type="text" placeholder="গ্রাম বা শহরের নাম">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl">থানা / ব্লক <span class="req">*</span></label>
+              <input id="thana" type="text" placeholder="থানা">
+            </div>
+            <div class="field">
+              <label class="lbl">জেলা <span class="req">*</span></label>
+              <input id="dist" type="text" placeholder="জেলা">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl">রাজ্য <span class="req">*</span></label>
+              <input id="state" type="text" placeholder="যেমন: WB" autocomplete="address-level1">
+            </div>
+            <div class="field">
+              <label class="lbl">PIN কোড <span class="req">*</span></label>
+              <input id="pin" type="text" placeholder="6 সংখ্যা" maxlength="6" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Work details -->
+      <div class="step" id="step4">
+        <div class="step-card">
+          <div class="step-title"><span class="sico">💼</span> কাজের বিবরণ</div>
+          <div class="field">
+            <label class="lbl">কোন কোন এলাকায় কাজ করেন <span class="req">*</span></label>
+            <input id="workarea" type="text" placeholder="যেমন: রায়গঞ্জ, ইসলামপুর">
+            <span class="hint">কমা দিয়ে আলাদা করুন</span>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl">দৈনিক মজুরি (₹)</label>
+              <input id="wage" type="number" placeholder="যেমন: 600" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label class="lbl">কাজের সময়</label>
+              <select id="timing">
+                <option value="">— বেছে নিন —</option>
+                <option>সকাল ৮টা–বিকেল ৫টা</option>
+                <option>সকাল ৯টা–সন্ধ্যা ৬টা</option>
+                <option>যেকোনো সময়</option>
+                <option>চুক্তি অনুযায়ী</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl">নিজের সম্পর্কে লিখুন</label>
+            <textarea id="bio" placeholder="আপনার বিশেষত্ব বা অভিজ্ঞতা সম্পর্কে কিছু লিখুন..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /form-scroll -->
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <div class="bottom-bar" id="bottomBar">
+      <button class="btn-back" id="btnBack" onclick="prevStep()" style="display:none;">← পিছনে</button>
+      <button class="btn-next" id="btnNext" onclick="nextStep()">পরবর্তী →</button>
+      <button class="btn-submit" id="btnSubmit" onclick="submitForm()" style="display:none;">✅ জমা দিন</button>
+    </div>
+  </div><!-- /formMain -->
+
+</div><!-- /pageForm -->
+
+
+<!-- ══════════ ADMIN PAGE ══════════ -->
+<div class="page" id="pageAdmin">
+
+  <!-- Lock screen -->
+  <div id="lockScreen">
+    <div class="lock-card">
+      <div class="lock-ico">🔐</div>
+      <h2>Admin Login</h2>
+      <p>শুধুমাত্র Admin এই তথ্য দেখতে পারবেন</p>
+      <input type="password" id="passInput" placeholder="Password দিন" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn-login" onclick="doLogin()">প্রবেশ করুন</button>
+      <div class="lock-err" id="lockErr">❌ ভুল Password! আবার চেষ্টা করুন।</div>
+      <p class="default-pw">Default password: <strong>mistri123</strong></p>
+      <button onclick="showPage('form')" style="margin-top:14px;background:none;border:none;color:var(--primary);font-size:13px;cursor:pointer;font-weight:600;">← ফর্মে ফিরে যান</button>
+    </div>
+  </div>
+
+  <!-- Admin panel -->
+  <div id="adminPanel" style="display:none;">
+    <div class="admin-scroll">
+
+      <div class="admin-header">
+        <h2>📊 সকল রেজিস্ট্রেশন</h2>
+        <div class="admin-actions">
+          <button class="btn-csv" onclick="exportCSV()">⬇ CSV</button>
+          <button class="btn-delall" onclick="deleteAll()">🗑 সব মুছুন</button>
+          <button class="btn-logout" onclick="doLogout()">🔒</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statsRow"></div>
+
+      <div class="search-bar">
+        <input id="searchBox" placeholder="🔍 নাম বা ফোন খুঁজুন..." oninput="renderCards()" style="border-radius:12px;">
+      </div>
+      <div class="filter-selects">
+        <select id="tradeFilter" onchange="renderCards()">
+          <option value="">সকল পেশা</option>
+          <option>False Ceiling মিস্ত্রি</option>
+          <option>Electrician</option>
+          <option>Wallpaper মিস্ত্রি</option>
+          <option>Painter</option>
+          <option>Tiles মিস্ত্রি</option>
+          <option>ACP মিস্ত্রি</option>
+          <option>Plumber</option>
+          <option>Carpenter</option>
+          <option>Building Contractor</option>
+          <option>Glass Window & Grill মিস্ত্রি</option>
+          <option>Decoration / Decorator</option>
+          <option>Floor Carpet Setup মিস্ত্রি</option>
+          <option>Artificial Grass / Flower মিস্ত্রি</option>
+          <option>Colour Tin Shade মিস্ত্রি</option>
+          <option>Building মিস্ত্রি</option>
+          <option>Profile Light / Setup মিস্ত্রি</option>
+          <option>Putti মিস্ত্রি</option>
+          <option>সোবার / অন্যান্য</option>
+        </select>
+        <select id="distFilter" onchange="renderCards()"><option value="">সকল জেলা</option></select>
+        <button class="btn-clearfilter" onclick="clearFilters()">✕</button>
+      </div>
+
+      <div class="rec-list" id="recList"></div>
+
+    </div>
+  </div>
+
+</div><!-- /pageAdmin -->
+
+
+<script>
+const STORE_KEY = 'mistri_v3';
+const PASS = 'mistri123';
+let trades = [];
+let currentStep = 1;
+const totalSteps = 4;
+let loggedIn = false;
+
+const stepLabels = [
+  'ধাপ ১ / ৪ — পেশা বেছে নিন',
+  'ধাপ ২ / ৪ — ব্যক্তিগত তথ্য',
+  'ধাপ ৩ / ৪ — ঠিকানা',
+  'ধাপ ৪ / ৪ — কাজের বিবরণ'
+];
+
+function getData() { try { return JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); } catch(e) { return []; } }
+function saveData(d) { localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
+
+function showPage(p) {
+  document.getElementById('pageForm').classList.toggle('active', p==='form');
+  document.getElementById('pageAdmin').classList.toggle('active', p==='admin');
+  if (p==='admin' && loggedIn) loadAdmin();
+}
+
+function pick(el) {
+  const t = el.dataset.t;
+  if (el.classList.contains('on')) { el.classList.remove('on'); trades = trades.filter(x=>x!==t); }
+  else { el.classList.add('on'); trades.push(t); }
+}
+
+function updateProgress() {
+  for (let i=1; i<=totalSteps; i++) {
+    const ps = document.getElementById('ps'+i);
+    if (i < currentStep) { ps.className='progress-step done'; }
+    else if (i===currentStep) { ps.className='progress-step active'; }
+    else { ps.className='progress-step'; }
+  }
+  document.getElementById('progressLabel').textContent = stepLabels[currentStep-1];
+  document.getElementById('btnBack').style.display = currentStep>1 ? 'block' : 'none';
+  document.getElementById('btnNext').style.display = currentStep<totalSteps ? 'block' : 'none';
+  document.getElementById('btnSubmit').style.display = currentStep===totalSteps ? 'block' : 'none';
+  for (let i=1; i<=totalSteps; i++) {
+    document.getElementById('step'+i).classList.toggle('active', i===currentStep);
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function validateStep(s) {
+  if (s===1) {
+    if (trades.length===0) { showToast('❗ কমপক্ষে একটি পেশা বেছে নিন।'); return false; }
+    return true;
+  }
+  if (s===2) {
+    const name=document.getElementById('name').value.trim();
+    const phone=document.getElementById('phone').value.trim();
+    const exp=document.getElementById('exp').value;
+    if (!name) { showToast('❗ নাম লিখুন।'); document.getElementById('name').focus(); return false; }
+    if (!phone || !/^[0-9]{10,11}$/.test(phone.replace(/\s/g,''))) { showToast('❗ সঠিক মোবাইল নম্বর দিন।'); document.getElementById('phone').focus(); return false; }
+    if (!exp) { showToast('❗ অভিজ্ঞতা বেছে নিন।'); return false; }
+    return true;
+  }
+  if (s===3) {
+    const fs = ['addr','village','thana','dist','state','pin'];
+    const labels = ['বাড়ির ঠিকানা','গ্রাম/শহর','থানা/ব্লক','জেলা','রাজ্য','PIN কোড'];
+    for (let i=0;i<fs.length;i++) {
+      if (!document.getElementById(fs[i]).value.trim()) {
+        showToast('❗ '+labels[i]+' লিখুন।');
+        document.getElementById(fs[i]).focus(); return false;
+      }
+    }
+    if (!/^\d{6}$/.test(document.getElementById('pin').value.trim())) {
+      showToast('❗ PIN কোড ঠিক ৬ সংখ্যার হতে হবে।');
+      document.getElementById('pin').focus(); return false;
+    }
+    return true;
+  }
+  if (s===4) {
+    if (!document.getElementById('workarea').value.trim()) {
+      showToast('❗ কাজের এলাকা লিখুন।');
+      document.getElementById('workarea').focus(); return false;
+    }
+    return true;
+  }
+  return true;
+}
+
+function nextStep() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep < totalSteps) { currentStep++; updateProgress(); }
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; updateProgress(); }
+}
+
+function submitForm() {
+  if (!validateStep(4)) return;
+  const v = id => document.getElementById(id).value.trim();
+  const rec = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('bn-IN'),
+    name: v('name'), phone: v('phone'), whatsapp: v('whatsapp'),
+    trades: [...trades], exp: v('exp'),
+    addr: v('addr'), village: v('village'), thana: v('thana'),
+    dist: v('dist'), state: v('state'), pin: v('pin'),
+    workarea: v('workarea'), wage: v('wage'), timing: v('timing'), bio: v('bio')
+  };
+  const all = getData(); all.push(rec); saveData(all);
+  document.getElementById('refBadge').textContent = 'Ref ID: ' + rec.id;
+  document.getElementById('formMain').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+}
+
+function resetForm() {
+  ['name','phone','whatsapp','addr','village','thana','dist','state','pin','workarea','wage','bio']
+    .forEach(id => document.getElementById(id).value = '');
+  ['exp','timing'].forEach(id => document.getElementById(id).value = '');
+  trades = [];
+  document.querySelectorAll('.trade-card').forEach(c => c.classList.remove('on'));
+  currentStep = 1;
+  updateProgress();
+  document.getElementById('formMain').style.display = 'block';
+  document.getElementById('successScreen').style.display = 'none';
+}
+
+function doLogin() {
+  if (document.getElementById('passInput').value === PASS) {
+    loggedIn = true;
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadAdmin();
+  } else {
+    document.getElementById('lockErr').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  loggedIn = false;
+  document.getElementById('passInput').value = '';
+  document.getElementById('lockErr').style.display = 'none';
+  document.getElementById('lockScreen').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+function loadAdmin() {
+  const data = getData();
+  const tradeCount = {};
+  data.forEach(r => (r.trades||[]).forEach(t => { tradeCount[t]=(tradeCount[t]||0)+1; }));
+  const topTrade = Object.keys(tradeCount).sort((a,b)=>tradeCount[b]-tradeCount[a])[0]||'—';
+  const dists = [...new Set(data.map(r=>r.dist).filter(Boolean))];
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-box"><div class="snum">${data.length}</div><div class="slbl">মোট রেজিস্ট্রেশন</div></div>
+    <div class="stat-box"><div class="snum">${dists.length}</div><div class="slbl">জেলা</div></div>
+    <div class="stat-box"><div class="snum" style="font-size:14px;line-height:1.4;margin-top:2px">${topTrade.split(' ')[0]}</div><div class="slbl">সবচেয়ে বেশি পেশা</div></div>
+  `;
+  const distSel = document.getElementById('distFilter');
+  const cur = distSel.value;
+  distSel.innerHTML = '<option value="">সকল জেলা</option>' + dists.map(d=>`<option ${d===cur?'selected':''}>${d}</option>`).join('');
+  renderCards();
+}
+
+function renderCards() {
+  const data = getData();
+  const q = (document.getElementById('searchBox').value||'').toLowerCase();
+  const tf = document.getElementById('tradeFilter').value;
+  const df = document.getElementById('distFilter').value;
+  const filtered = data.filter(r => {
+    const mQ = !q || r.name.toLowerCase().includes(q) || r.phone.includes(q);
+    const mT = !tf || (r.trades||[]).includes(tf);
+    const mD = !df || r.dist===df;
+    return mQ && mT && mD;
+  });
+  const list = document.getElementById('recList');
+  if (!filtered.length) { list.innerHTML = '<div class="no-data">📭 কোনো তথ্য পাওয়া যায়নি</div>'; return; }
+  list.innerHTML = filtered.slice().reverse().map((r,i) => {
+    const initials = r.name ? r.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '??';
+    const badges = (r.trades||[]).map(t=>`<span class="badge">${t}</span>`).join('');
+    return `
+    <div class="rec-card">
+      <div class="rec-card-top">
+        <div class="rec-avatar">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="rec-name">${r.name}</div>
+          <div class="rec-date">${r.date||''} • Ref: ${r.id}</div>
+        </div>
+        <a class="btn-call" href="tel:${r.phone}">📞 কল</a>
+      </div>
+      <div class="trades-wrap">${badges}</div>
+      <div class="rec-meta">
+        <div class="rec-meta-item"><span class="mk">মোবাইল</span><span class="mv">${r.phone}</span></div>
+        <div class="rec-meta-item"><span class="mk">অভিজ্ঞতা</span><span class="mv">${r.exp||'—'}</span></div>
+        <div class="rec-meta-item"><span class="mk">জেলা</span><span class="mv">${r.dist||'—'}</span></div>
+        <div class="rec-meta-item"><span class="mk">PIN</span><span class="mv">${r.pin||'—'}</span></div>
+        <div class="rec-meta-item"><span class="mk">এলাকা</span><span class="mv">${r.workarea||'—'}</span></div>
+        <div class="rec-meta-item"><span class="mk">মজুরি</span><span class="mv">${r.wage?'₹'+r.wage:'—'}</span></div>
+      </div>
+      <div class="rec-footer">
+        <span style="font-size:12px;color:var(--muted);">${r.village||''} ${r.thana?'• '+r.thana:''}</span>
+        <button class="btn-del" onclick="delRec(${r.id})">🗑 মুছুন</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function delRec(id) {
+  if (!confirm('এই রেকর্ড মুছে ফেলবেন?')) return;
+  saveData(getData().filter(r=>r.id!==id));
+  loadAdmin();
+}
+
+function deleteAll() {
+  if (!confirm('সকল ডেটা মুছে ফেলবেন? এটি ফেরানো যাবে না।')) return;
+  saveData([]); loadAdmin();
+}
+
+function clearFilters() {
+  document.getElementById('searchBox').value='';
+  document.getElementById('tradeFilter').value='';
+  document.getElementById('distFilter').value='';
+  renderCards();
+}
+
+function exportCSV() {
+  const data = getData();
+  if (!data.length) { showToast('কোনো তথ্য নেই।'); return; }
+  const headers = ['ID','তারিখ','নাম','মোবাইল','WhatsApp','পেশা','অভিজ্ঞতা','ঠিকানা','গ্রাম','থানা','জেলা','রাজ্য','PIN','কাজের এলাকা','মজুরি','কাজের সময়','বিবরণ'];
+  const rows = data.map(r=>[r.id,r.date,r.name,r.phone,r.whatsapp||'',(r.trades||[]).join(' | '),r.exp||'',r.addr||'',r.village||'',r.thana||'',r.dist||'',r.state||'',r.pin||'',r.workarea||'',r.wage||'',r.timing||'',(r.bio||'').replace(/,/g,' ')]);
+  const csv=[headers,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url;
+  a.download='mistri_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+updateProgress();
+</script>
+<div class="toast" id="toast"></div>
+</body>
+</html>
